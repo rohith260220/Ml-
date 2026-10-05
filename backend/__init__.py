@@ -1,0 +1,1 @@
+"""Emotion recognition inference service."""

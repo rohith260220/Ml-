@@ -1,0 +1,10 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+python-multipart>=0.0.9
+tensorflow>=2.16,<2.20
+opencv-python-headless>=4.10,<5
+numpy>=1.26,<2.1
+pandas>=2.2,<3
+scikit-learn>=1.5,<2
+matplotlib>=3.9,<4
+Pillow>=10.4,<12

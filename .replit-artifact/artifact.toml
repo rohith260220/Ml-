@@ -1,0 +1,51 @@
+kind = "web"
+previewPath = "/"
+title = "AI Emotion Recognition"
+description = "A real-time facial expression analysis demo using FER-2013 preprocessing, OpenCV Haar-cascade face detection, and a TensorFlow/Keras seven-class CNN, with webcam and image upload flows."
+version = "1.0.0"
+id = "artifacts/emotion-recognition"
+router = "path"
+
+[[services]]
+name = "web"
+paths = ["/"]
+localPort = 25076
+
+[services.development]
+run = "pnpm --filter @workspace/emotion-recognition run dev"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/emotion-recognition", "run", "build"]
+serve = "static"
+publicDir = "artifacts/emotion-recognition/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25076"
+BASE_PATH = "/"
+
+[[services]]
+name = "Emotion API"
+paths = ["/api/emotion"]
+localPort = 8000
+
+[services.development]
+run = "python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+
+[services.production.build]
+args = ["python", "-m", "pip", "install", "--no-cache-dir", "-r", "artifacts/emotion-recognition/backend/requirements.txt"]
+
+[services.production.run]
+args = ["python", "-m", "uvicorn", "backend.main:app", "--app-dir", "artifacts/emotion-recognition", "--host", "0.0.0.0", "--port", "8000"]
+
+[services.production.run.env]
+PORT = "8000"
+
+[services.production.health.startup]
+path = "/api/emotion/health"
+
+[services.env]
+PORT = "8000"
